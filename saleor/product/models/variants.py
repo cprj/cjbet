@@ -16,8 +16,15 @@ from .discounts import get_product_discounts
 class BetProduct(models.Model):
     price = PriceField(
         pgettext_lazy('Product field', 'price'),
-        currency=settings.DEFAULT_CURRENCY, max_digits=12, decimal_places=4)
+        currency=settings.DEFAULT_CURRENCY, max_digits=12, decimal_places=2)
 
+    def get_price_per_item(self, discounts=None, **kwargs):
+        if self.price is not None:
+            price = self.price
+        else:
+            price = self.product.price
+        return price
+    
     class Meta:
         abstract = True
         app_label = 'product'

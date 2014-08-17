@@ -8,7 +8,7 @@ from django.utils.safestring import mark_safe
 from django.utils.translation import pgettext_lazy
 from model_utils.managers import InheritanceManager
 from mptt.models import MPTTModel
-from satchless.item import ItemRange
+from satchless.item import Item
 from unidecode import unidecode
 
 
@@ -36,7 +36,7 @@ class Category(MPTTModel):
 
 
 @python_2_unicode_compatible
-class Product(models.Model, ItemRange):
+class Product(models.Model, Item):
     name = models.CharField(
         pgettext_lazy('Product field', 'name'), max_length=128)
     category = models.ForeignKey(

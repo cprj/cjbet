@@ -50,3 +50,10 @@ class BetSelection(Product, BetProduct):
     
     class Meta:
         app_label = 'product'
+        
+class BetVariant(ProductVariant):
+
+    product = models.ForeignKey(BetSelection, related_name='variants')
+
+    class Meta:
+        app_label = 'product'
