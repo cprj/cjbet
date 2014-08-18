@@ -1,0 +1,52 @@
+{% extends "checkout/address.html" %}
+{% load as_horizontal_form from bootstrap %}
+{% load as_vertical_form from bootstrap %}
+{% load gross from prices_i18n %}
+{% load i18n %}
+
+{% block step_info %}
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            {% trans "Delivery group" %}
+        </div>
+        <div class="panel-body">
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th class="col-sm-4">{% trans "Name" %}</th>
+                            <th class="col-sm-2">{% trans "Price" %}</th>
+                            <th class="col-sm-2">{% trans "Subtotal" %}</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for item in items %}
+                            <tr>
+                                <td class="col-sm-4">{{ item.product }}{% if item.quantity != 1 %} <em>×{{ item.quantity }}</em>{% endif %}</td>
+                                <td class="col-sm-2">{% gross item.get_price_per_item %}</td>
+                                <td class="col-sm-2">{% gross item.get_total %}</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+        </div>
+    </div>
+    <hr>
+{% endblock %}
+
+{% block use_this_address %}
+    <button type="submit" class="btn {% if entry.is_selected %}btn-primary{% else %}btn-default{% endif %} btn-lg col-sm-12">{% trans "Ship to this address" %}</button>
+{% endblock %}
+
+{% block extra_address_fields %}
+    {{ delivery_form|as_vertical_form }}
+{% endblock %}
+
+{% block extra_forms %}
+    {{ delivery_form|as_horizontal_form }}
+{% endblock extra_forms %}
+
+{% block form_submit %}
+    <button type="submit" class="btn btn-primary">
+        {% trans "Ship to this address" %}
+    </button>
+{% endblock %}
