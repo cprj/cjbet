@@ -48,7 +48,7 @@ class Event(db.Model):
     id = db.Column(db.Integer, primary_key = True)
     name = db.Column(db.String(64))
     start = db.Column(db.DateTime)
-    is_locked = db.Column(db.Boolean)
+    is_locked = db.Column(db.Boolean, default = False)
     markets = db.relationship('Market', backref = 'event', lazy = 'dynamic')
     # has many markets
 
@@ -56,7 +56,7 @@ class Market(db.Model):
     id = db.Column(db.Integer, primary_key = True)
     name = db.Column(db.String(64))
     pool = db.Column(db.Float, default = 0)
-    is_locked = db.Column(db.Boolean)
+    is_locked = db.Column(db.Boolean, default = False)
     event_id = db.Column(db.Integer, db.ForeignKey('event.id'))
     selections = db.relationship('Selection', backref = 'market', lazy = 'dynamic')
 	
