@@ -1,0 +1,19 @@
+<!-- extend base layout -->
+{% extends "base.html" %}
+
+{% block content %}
+
+    {% for selection in selections %}
+    <div class="row">
+            <div class="col-xs-4">
+                <div class="input-group">
+                    <input type="text" class="form-control" placeholder="{{selection.name}}" disabled="disabled">
+                    <span class="input-group-btn">
+                        <a href="{{ url_for('add', id = selection.id) }}" class="btn btn-success"><span class="glyphicon glyphicon-usd"></span> {{'%0.2f' % selection.dividend}}</a>
+                    </span>
+                </div>
+            </div>
+        </div>
+    {% endfor %}
+    
+{% endblock %}
