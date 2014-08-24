@@ -65,7 +65,8 @@ class Selection(db.Model):
     name = db.Column(db.String(64))
     dividend = db.Column(db.Float, default = 0)
     is_winner = db.Column(db.Boolean, default = False)
-	
+    market_id = db.Column(db.Integer, db.ForeignKey('market.id'))
+    
 class Bet(db.Model):
     id = db.Column(db.Integer, primary_key = True)
     state = db.Column(db.String(64)) # pending, win, loss

@@ -37,7 +37,7 @@
                 {% if g.user.is_authenticated() %}
                 <li><a href="{{ url_for('user', nickname = g.user.nickname) }}">Your Profile</a></li>
                 <li><a href="{{ url_for('logout') }}">Logout</a></li>
-                <li class="active"><a href="#" class="btn" data-toggle="modal" data-target="#smallModal"><span class="badge">{{ session.betslip }}</span>Bet Slip</a></li>
+                <li class="active"><a href="#" class="btn" data-toggle="modal" data-target="#smallModal"><span class="badge">{{ session.betslip|length }}</span>Bet Slip</a></li>
                 {% endif %}
                 <li class="dropdown">
                     <a data-toggle="dropdown" class="dropdown-toggle" href="#">Messages <b class="caret"></b></a>
@@ -50,13 +50,6 @@
                     </ul>
                 </li>
             </ul>
-            {% if g.user.is_authenticated() %}
-            <form role="search" class="navbar-form navbar-left" action="{{url_for('search')}}" method="post" name="search">
-                <div class="form-group">
-                    {{g.search_form.hidden_tag()}}{{g.search_form.search(size=20,placeholder="Search",class="form-control")}}
-                </div>
-            </form>
-            {% endif %}
             <ul class="nav navbar-nav navbar-right">
                 <li><a href="#">Login</a></li>
             </ul>
@@ -69,22 +62,6 @@
         </div>
     </div>
   </div>
-  <div class="modal fade" id="smallModal" tabindex="-1" role="dialog" aria-labelledby="smallModal" aria-hidden="true">
-  <div class="modal-dialog modal-sm">
-    <div class="modal-content">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-        <h4 class="modal-title" id="myModalLabel">Bet Slip</h4>
-      </div>
-      <div class="modal-body">
-        <h3>{{ g.betslip }}</h3>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-danger" >Clear</button>
-        <button type="button" class="btn btn-success">Confirm</button>
-      </div>
-    </div>
-  </div>
-</div>
+  {% include 'betslip.html' %}
   </body>
 </html>

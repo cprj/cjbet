@@ -12,7 +12,7 @@ m4 = models.Market(name='First Goal 2nd Qtr',event=e)
 m5 = models.Market(name='First Goal 3rd Qtr',event=e)
 m6 = models.Market(name='First Goal 4th Qtr',event=e)
 m7 = models.Market(name='First Score Combo',event=e)
-m8 = models.Market(name='Most Goals by Player'event=e)
+m8 = models.Market(name='Most Goals by Player',event=e)
 m9 = models.Market(name='Qtr By Qtr Lead',event=e)
 m10 = models.Market(name='Total Goals',event=e)
 m11 = models.Market(name='Total Score',event=e)
@@ -228,29 +228,29 @@ db.session.add(models.Selection(name='Clarke, Zac (Fremantle #30)',market=m8))
 db.session.add(models.Selection(name='Ballantyne, Hayden (Fremantle #1)',market=m8))
 
 # Qtr By Qtr Lead
-Draw at end of any quarter
-Fremantle-Fremantle-Fremantle-Fremantle	$9.40	Add Winner
-Hawthorn-Fremantle-Fremantle-Hawthorn	$15.67	Add Winner
-Hawthorn-Fremantle-Hawthorn-Hawthorn	$23.50	Add Winner
-Hawthorn-Hawthorn-Hawthorn-Hawthorn	$23.50	Remove Winner
-Fremantle-Fremantle-Hawthorn-Hawthorn	$23.50	Add Winner
-Fremantle-Hawthorn-Fremantle-Fremantle	$23.50	Add Winner
-Hawthorn-Fremantle-Fremantle-Fremantle	$47.00	Add Winner
-Hawthorn-Hawthorn-Fremantle-Fremantle	$47.00	Add Winner
-Hawthorn-Fremantle-Hawthorn-Fremantle	$47.00	Add Winner
-Hawthorn-Hawthorn-Fremantle-Hawthorn	$47.00	Add Winner
-Fremantle-Fremantle-Fremantle-Hawthorn	$47.00	Add Winner
-Hawthorn-Hawthorn-Hawthorn-Fremantle	$47.00	Add Winner
-Fremantle-Hawthorn-Hawthorn-Fremantle	$47.00	Add Winner
-Fremantle-Hawthorn-Fremantle-Hawthorn	$47.00	Add Winner
-Fremantle-Fremantle-Hawthorn-Fremantle	$47.00	Add Winner
-Fremantle-Hawthorn-Hawthorn-Hawthorn
+#Draw at end of any quarter
+#Fremantle-Fremantle-Fremantle-Fremantle	$9.40	Add Winner
+#Hawthorn-Fremantle-Fremantle-Hawthorn	$15.67	Add Winner
+#Hawthorn-Fremantle-Hawthorn-Hawthorn	$23.50	Add Winner
+#Hawthorn-Hawthorn-Hawthorn-Hawthorn	$23.50	Remove Winner
+#Fremantle-Fremantle-Hawthorn-Hawthorn	$23.50	Add Winner
+#Fremantle-Hawthorn-Fremantle-Fremantle	$23.50	Add Winner
+#Hawthorn-Fremantle-Fremantle-Fremantle	$47.00	Add Winner
+#Hawthorn-Hawthorn-Fremantle-Fremantle	$47.00	Add Winner
+#Hawthorn-Fremantle-Hawthorn-Fremantle	$47.00	Add Winner
+#Hawthorn-Hawthorn-Fremantle-Hawthorn	$47.00	Add Winner
+#Fremantle-Fremantle-Fremantle-Hawthorn	$47.00	Add Winner
+#Hawthorn-Hawthorn-Hawthorn-Fremantle	$47.00	Add Winner
+#Fremantle-Hawthorn-Hawthorn-Fremantle	$47.00	Add Winner
+#Fremantle-Hawthorn-Fremantle-Hawthorn	$47.00	Add Winner
+#Fremantle-Fremantle-Hawthorn-Fremantle	$47.00	Add Winner
+#Fremantle-Hawthorn-Hawthorn-Hawthorn
 
 
 
 
-m10 = models.Market(name='Total Goals',event=e)
-m11 = models.Market(name='Total Score',event=e)
+#m10 = models.Market(name='Total Goals',event=e)
+#m11 = models.Market(name='Total Score',event=e)
 
 
 

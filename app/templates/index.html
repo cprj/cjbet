@@ -4,69 +4,22 @@
 {% block content %}
 <h1>Hi, {{g.user.nickname}}!</h1>
 {% include 'flash.html' %}
-<form class="form-horizontal" action="" method="post" name="post">
-        <div class="row">
-            <div class="col-xs-3">
-                <div class="input-group">
-                    <input type="text" class="form-control" placeholder="Haw 1-12" disabled="disabled">
-                    <span class="input-group-btn">
-                        <button type="button" class="btn btn-success btn"><span class="glyphicon glyphicon-usd"></span> 2.11</button>
-                    </span>
-                </div>
-                <div class="input-group">
-                    <input type="text" class="form-control" placeholder="Haw 13-24" disabled="disabled">
-                    <span class="input-group-btn">
-                        <a href="{{ url_for('add', poo = g.user.nickname) }}" class="btn btn-success"><span class="glyphicon glyphicon-usd"></span> 2.11</a>
-                    </span>
-                </div>
-                <div class="input-group">
-                    <input type="text" class="form-control" placeholder="Haw 13-24" disabled="disabled">
-                    <span class="input-group-btn">
-                        <a href="{{ url_for('add', poo = g.user.nickname) }}" class="btn btn-success"><span class="glyphicon glyphicon-usd"></span> 2.11</a>
-                    </span>
-                </div>
-                <div class="input-group">
-                    <input type="text" class="form-control" placeholder="Haw 13-24" disabled="disabled">
-                    <span class="input-group-btn">
-                        <a href="{{ url_for('add', poo = g.user.nickname) }}" class="btn btn-success"><span class="glyphicon glyphicon-usd"></span> 2.11</a>
-                    </span>
-                </div>
-            </div>
-        </div>
-    </form>
 
-<div class="well">
-    <form class="form-horizontal" action="" method="post" name="post">
-        {{form.hidden_tag()}}
-        <div class="control-group{% if form.errors.post %} error{% endif %}">
-            <label class="control-label" for="post">Say something:</label>
-            <div class="controls">
-                {{ form.post(size = 30, maxlength = 140) }}
-                {% for error in form.errors.post %}
-                    <span class="help-inline">[{{error}}]</span><br>
-                {% endfor %}
-            </div>
-        </div>
-        <div class="control-group">
-            <div class="controls">
-                <input class="btn btn-success" type="submit" value="Post!">
-            </div>
-        </div>
-    </form>
-</div>
-{% for post in posts.items %}
-    {% include 'post.html' %}
+
+<table class="table table-hover">
+<tbody>
+{% for event in events %}
+    {% include 'event.html' %}
 {% endfor %}
-<ul class="pager">
-    {% if posts.has_prev %}
-    <li class="previous"><a href="{{ url_for('index', page = posts.prev_num) }}">Newer posts</a></li>
-    {% else %}
-    <li class="previous disabled"><a href="#">Newer posts</a></li>
-    {% endif %}
-    {% if posts.has_next %}
-    <li class="next"><a href="{{ url_for('index', page = posts.next_num) }}">Older posts</a></li>
-    {% else %}
-    <li class="next disabled"><a href="#">Older posts</a></li>
-    {% endif %}
-</ul>
+</tbody>
+</table>
+<table class="table table-hover">
+<tbody>
+{% for market in markets %}
+    <tr>
+        <td><a href="{{url_for('market', id = market.id)}}">{{market.name}}</a></td>
+    </tr>
+{% endfor %}
+</tbody>
+</table>
 {% endblock %}

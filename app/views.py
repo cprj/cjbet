@@ -2,7 +2,7 @@ from flask import render_template, flash, redirect, session, url_for, request, g
 from flask.ext.login import login_user, logout_user, current_user, login_required
 from app import app, db, lm, oid
 from forms import LoginForm, EditForm
-from models import User, ROLE_USER, ROLE_ADMIN, Event
+from models import User, ROLE_USER, ROLE_ADMIN, Event, Market, Selection
 from datetime import datetime
 from config import POSTS_PER_PAGE, MAX_SEARCH_RESULTS
 
@@ -17,7 +17,6 @@ def before_request():
         g.user.last_seen = datetime.utcnow()
         db.session.add(g.user)
         db.session.commit()
-        g.search_form = SearchForm()
 
 @app.errorhandler(404)
 def internal_error(error):
@@ -34,9 +33,11 @@ def internal_error(error):
 @login_required
 def index(page = 1):
     events = Event.query.all()
+    markets = Market.query.all()
     return render_template('index.html',
         title = 'Home',
-        events = events)
+        events = events,
+        markets = markets)
 
 @app.route('/login', methods = ['GET', 'POST'])
 @oid.loginhandler
@@ -66,8 +67,6 @@ def after_login(resp):
         user = User(nickname = nickname, email = resp.email, role = ROLE_USER)
         db.session.add(user)
         db.session.commit()
-        # make the user follow him/herself
-        db.session.add(user.follow(user))
         db.session.commit()
     remember_me = False
     if 'remember_me' in session:
@@ -112,14 +111,27 @@ def edit():
         form = form)
 
         
-@app.route('/add/<poo>')
+@app.route('/market/<id>')
 @login_required
-def add(poo):
-   print poo
-   session['betslip'] = 10
-   return redirect(url_for('index'))
+def market(id):
+    market = Market.query.filter_by(id = id).first()
+    print market.selections
+    return render_template('market.html', selections = market.selections)
 
-@app.route('/betslip', methods = ['GET', 'POST'])
+@app.route('/add/<id>')
 @login_required
-def betslip():
-     return render_template('betslip.html')
+def add(id):
+    selection = Selection.query.filter_by(id = id).first()
+    session['betslip'].append(selection)
+    print selection.name
+    return redirect(url_for('market', id = selection.market.id))
+
+@app.route('/clear>')
+@login_required
+def clear_bets():
+    session['betslip'] = []
+    
+@app.route('/confirm>')
+@login_required
+def confirm_bets():
+    session['betslip']
