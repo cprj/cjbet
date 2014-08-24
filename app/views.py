@@ -122,16 +122,22 @@ def market(id):
 @login_required
 def add(id):
     selection = Selection.query.filter_by(id = id).first()
-    session['betslip'].append(selection)
+    print session['betslip'] 
+    #session['betslip'].append(selection)
+    session['betslip'] += [selection]
     print selection.name
     return redirect(url_for('market', id = selection.market.id))
 
-@app.route('/clear>')
+@app.route('/clear_bets')
 @login_required
 def clear_bets():
     session['betslip'] = []
+    return redirect(url_for('index'))
     
-@app.route('/confirm>')
+@app.route('/confirm_bets')
 @login_required
 def confirm_bets():
-    session['betslip']
+    for selection in session['betslip']:
+        print selection.name
+    session['betslip'] = []
+    return redirect(url_for('index'))
