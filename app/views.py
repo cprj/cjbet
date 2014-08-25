@@ -141,9 +141,10 @@ def clear_bets():
 def confirm_bets():
     for selection in session['betslip']:
         print selection.name
-        selection.selected_count += 1
-        selection.market.pool += 1
-        db.session.add(selection)
+        m = Market.query.get(selection.market_id)
+        m.pool += 1
+        s = Selection.query.get(selection.id)
+        s.selected_count += 1
         db.session.commit()
     session.pop('betslip', None)
     return redirect(url_for('index'))
