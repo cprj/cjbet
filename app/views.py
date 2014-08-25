@@ -77,6 +77,8 @@ def after_login(resp):
 
 @app.route('/logout')
 def logout():
+    if 'betslip' in session:
+    	session.pop('betslip', None)
     logout_user()
     return redirect(url_for('index'))
     
@@ -88,10 +90,7 @@ def user(nickname, page = 1):
     if user == None:
         flash('User ' + nickname + ' not found.')
         return redirect(url_for('index'))
-    posts = user.posts.paginate(page, POSTS_PER_PAGE, False)
-    return render_template('user.html',
-        user = user,
-        posts = posts)
+	return render_template('user.html', user = user)
 
 @app.route('/edit', methods = ['GET', 'POST'])
 @login_required
@@ -114,24 +113,27 @@ def edit():
 @app.route('/market/<id>')
 @login_required
 def market(id):
-    market = Market.query.filter_by(id = id).first()
-    print market.selections
-    return render_template('market.html', selections = market.selections)
+    selections = Selection.query.filter_by(market_id = id).order_by(Selection.selected_count.desc()).all()
+    return render_template('market.html', selections = selections)
 
 @app.route('/add/<id>')
 @login_required
 def add(id):
     selection = Selection.query.filter_by(id = id).first()
-    print session['betslip'] 
     #session['betslip'].append(selection)
-    session['betslip'] += [selection]
+    if 'betslip' in session:
+    	session['betslip'] += [selection]
+    else: 
+    	session['betslip'] = []
+    	session['betslip'] += [selection]
     print selection.name
     return redirect(url_for('market', id = selection.market.id))
 
 @app.route('/clear_bets')
 @login_required
 def clear_bets():
-    session['betslip'] = []
+    if 'betslip' in session:
+    	session.pop('betslip', None)
     return redirect(url_for('index'))
     
 @app.route('/confirm_bets')
@@ -139,5 +141,9 @@ def clear_bets():
 def confirm_bets():
     for selection in session['betslip']:
         print selection.name
-    session['betslip'] = []
+        selection.selected_count += 1
+        selection.market.pool += 1
+        db.session.add(selection)
+        db.session.commit()
+    session.pop('betslip', None)
     return redirect(url_for('index'))

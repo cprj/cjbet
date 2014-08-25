@@ -17,7 +17,7 @@
 <tbody>
 {% for market in markets %}
     <tr>
-        <td><a href="{{url_for('market', id = market.id)}}">{{market.name}}</a></td>
+        <td><a href="{{url_for('market', id = market.id)}}">{{market.name}} ({{'$%0.2f' % market.pool}})</a></td>
     </tr>
 {% endfor %}
 </tbody>

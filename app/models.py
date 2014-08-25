@@ -63,9 +63,15 @@ class Market(db.Model):
 class Selection(db.Model):
     id = db.Column(db.Integer, primary_key = True)
     name = db.Column(db.String(64))
-    dividend = db.Column(db.Float, default = 0)
+    selected_count = db.Column(db.Integer, default = 0)
     is_winner = db.Column(db.Boolean, default = False)
     market_id = db.Column(db.Integer, db.ForeignKey('market.id'))
+    
+    def dividend(self):
+    	if self.selected_count > 0:
+    		return float(self.market.pool / self.selected_count)
+    	else:
+    		return self.market.pool
     
 class Bet(db.Model):
     id = db.Column(db.Integer, primary_key = True)

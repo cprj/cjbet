@@ -35,23 +35,28 @@
             <ul class="nav navbar-nav nav-pills">
                 <li><a href="{{ url_for('index') }}">Home</a></li>
                 {% if g.user.is_authenticated() %}
-                <li><a href="{{ url_for('user', nickname = g.user.nickname) }}">Your Profile</a></li>
-                <li><a href="{{ url_for('logout') }}">Logout</a></li>
-                <li class="active"><a href="#" class="btn" data-toggle="modal" data-target="#smallModal"><span class="badge">{{ session.betslip|length }}</span>Bet Slip</a></li>
+	                <li><a href="{{ url_for('user', nickname = g.user.nickname) }}">Your Profile</a></li>
+	                <li class="dropdown">
+	                    <a data-toggle="dropdown" class="dropdown-toggle" href="#">Messages <b class="caret"></b></a>
+	                    <ul role="menu" class="dropdown-menu">
+	                        <li><a href="#">Inbox</a></li>
+	                        <li><a href="#">Drafts</a></li>
+	                        <li><a href="#">Sent Items</a></li>
+	                        <li class="divider"></li>
+	                        <li><a href="#">Trash</a></li>
+	                    </ul>
+	                </li>
+	                {% if session.betslip %}
+	                <li class="active"><a href="#" class="btn" data-toggle="modal" data-target="#smallModal"><span class="badge">{{ session.betslip|length }}</span>Bet Slip</a></li>
+	                {% endif %}
                 {% endif %}
-                <li class="dropdown">
-                    <a data-toggle="dropdown" class="dropdown-toggle" href="#">Messages <b class="caret"></b></a>
-                    <ul role="menu" class="dropdown-menu">
-                        <li><a href="#">Inbox</a></li>
-                        <li><a href="#">Drafts</a></li>
-                        <li><a href="#">Sent Items</a></li>
-                        <li class="divider"></li>
-                        <li><a href="#">Trash</a></li>
-                    </ul>
-                </li>
             </ul>
             <ul class="nav navbar-nav navbar-right">
-                <li><a href="#">Login</a></li>
+                {% if g.user.is_authenticated() %}
+                	<li><a href="{{ url_for('logout') }}">Logout</a></li>
+	            {% else %}
+	            	<li><a href="#">Login</a></li>
+	            {% endif %}
             </ul>
         </div>
     </nav>

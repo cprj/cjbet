@@ -1,3 +1,5 @@
 *.pyc
 *.pyc
 tmp/
+*.pyc
+*.pyc
