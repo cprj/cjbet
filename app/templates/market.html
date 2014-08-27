@@ -9,7 +9,7 @@
                 <div class="input-group">
                     <input type="text" class="form-control" placeholder="{{selection.name}}" disabled="disabled">
                     <span class="input-group-btn">
-                        <a href="{{ url_for('add', id = selection.id) }}" class="btn btn-success"><span class="glyphicon glyphicon-usd"></span> {{'%0.2f' % selection.dividend()}}</a>
+                        <a href="{{ url_for('add', id = selection.id) }}" class="btn btn-success"><span class="glyphicon glyphicon-usd"></span> {{'%0.2f' % selection.dividend()}} <span class="glyphicon glyphicon glyphicon-plus-sign"></span></a>
                     </span>
                 </div>
             </div>

@@ -126,8 +126,9 @@ def add(id):
     else: 
     	session['betslip'] = []
     	session['betslip'] += [selection]
+    print 'here'
     print selection.name
-    return redirect(url_for('market', id = selection.market.id))
+    return redirect(url_for('index'))
 
 @app.route('/clear_bets')
 @login_required

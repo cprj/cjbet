@@ -13,13 +13,31 @@
 {% endfor %}
 </tbody>
 </table>
-<table class="table table-hover">
-<tbody>
-{% for market in markets %}
-    <tr>
-        <td><a href="{{url_for('market', id = market.id)}}">{{market.name}} ({{'$%0.2f' % market.pool}})</a></td>
-    </tr>
-{% endfor %}
-</tbody>
-</table>
+<div class="panel-group" id="accordion">
+    {% for market in markets %}
+    <div class="panel panel-info">
+        <div class="panel-heading" data-toggle="collapse" data-parent="#accordion" data-target="#collapse{{market.id}}">
+            <h4 class="panel-title accordion-toggle">
+                {{market.name}} ({{'$%0.2f' % market.pool}})
+            </h4>
+        </div>
+        <div id="collapse{{market.id}}" class="panel-collapse collapse">
+      <div class="panel-body">
+        {% for selection in market.selections %}
+    <div class="row">
+            <div class="col-xs-4">
+                <div class="input-group">
+                    <input type="text" class="form-control" placeholder="{{selection.name}}" disabled="disabled">
+                    <span class="input-group-btn">
+                        <a href="{{ url_for('add', id = selection.id) }}" class="btn btn-success"><span class="glyphicon glyphicon-usd"></span> {{'%0.2f' % selection.dividend()}} <span class="glyphicon glyphicon glyphicon-plus-sign"></span></a>
+                    </span>
+                </div>
+            </div>
+        </div>
+    {% endfor %}
+      </div>
+    </div>
+    </div>
+    {% endfor %}
+</div>
 {% endblock %}

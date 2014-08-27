@@ -8,13 +8,14 @@
       <div class="modal-body">
          {% for selection in session.betslip  %} 
           <div class="row">
-          {{ selection.name }} <small><em> ({{selection.market.name}})</em></small>
+          {{ selection.name }} <small><em> (##need market name here##)</em></small>
           </div>
          {% endfor %}
       </div>
       <div class="modal-footer">
-        <a href="{{ url_for('clear_bets') }}" class="btn btn-danger">Clear</a>
-        <a href="{{ url_for('confirm_bets') }}" class="btn btn-success">Confirm</a>
+        <h4>Total: {{ '$%0.2f' % session.betslip|count }}</h4>
+          <a href="{{ url_for('clear_bets') }}" class="btn btn-danger"><span class="glyphicon glyphicon glyphicon-remove"></span> Clear</a>
+        <a href="{{ url_for('confirm_bets') }}" class="btn btn-success"><span class="glyphicon glyphicon glyphicon-ok"></span> Confirm</a>
       </div>
     </div>
   </div>
