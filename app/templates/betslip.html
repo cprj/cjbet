@@ -6,11 +6,13 @@
         <h4 class="modal-title" id="myModalLabel">Bet Slip</h4>
       </div>
       <div class="modal-body">
-         {% for selection in session.betslip  %} 
+         <div class="well">
+          {% for selection in session.betslip  %} 
           <div class="row">
-          {{ selection.name }} <small><em> (##need market name here##)</em></small>
+          {{ selection.name }} <small><em> {{ selection.market_name() }} </em></small>
           </div>
          {% endfor %}
+        </div>
       </div>
       <div class="modal-footer">
         <h4>Total: {{ '$%0.2f' % session.betslip|count }}</h4>

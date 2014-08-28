@@ -59,6 +59,9 @@ class Market(db.Model):
     is_locked = db.Column(db.Boolean, default = False)
     event_id = db.Column(db.Integer, db.ForeignKey('event.id'))
     selections = db.relationship('Selection', backref = 'market', lazy = 'dynamic')
+    
+    def selections_by_divd(self):
+        return Selection.query.filter_by(market_id = self.id).order_by(Selection.selected_count.desc()).all()
 	
 class Selection(db.Model):
     id = db.Column(db.Integer, primary_key = True)
@@ -72,6 +75,9 @@ class Selection(db.Model):
     		return float(self.market.pool / self.selected_count)
     	else:
     		return self.market.pool
+        
+    def market_name(self):
+        return Market.query.get(self.market_id).name
     
 class Bet(db.Model):
     id = db.Column(db.Integer, primary_key = True)
