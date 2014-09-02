@@ -69,6 +69,7 @@ class Selection(db.Model):
     selected_count = db.Column(db.Integer, default = 0)
     is_winner = db.Column(db.Boolean, default = False)
     market_id = db.Column(db.Integer, db.ForeignKey('market.id'))
+    bets = db.relationship('Bet', backref = 'selected', lazy = 'dynamic')
     
     def dividend(self):
     	if self.selected_count > 0:
@@ -84,6 +85,5 @@ class Bet(db.Model):
     state = db.Column(db.String(64)) # pending, win, loss
     timestamp = db.Column(db.DateTime)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
-    # has one selection
     selection_id = db.Column(db.Integer, db.ForeignKey('selection.id'))
-    selection = db.relationship('Selection', backref=db.backref('bet', uselist=False))
+    

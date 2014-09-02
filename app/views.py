@@ -2,7 +2,7 @@ from flask import render_template, flash, redirect, session, url_for, request, g
 from flask.ext.login import login_user, logout_user, current_user, login_required
 from app import app, db, lm, oid
 from forms import LoginForm, EditForm
-from models import User, ROLE_USER, ROLE_ADMIN, Event, Market, Selection
+from models import User, ROLE_USER, ROLE_ADMIN, Event, Market, Selection, Bet
 from datetime import datetime
 from config import POSTS_PER_PAGE, MAX_SEARCH_RESULTS
 
@@ -145,6 +145,7 @@ def confirm_bets():
         m.pool += 1
         s = Selection.query.get(selection.id)
         s.selected_count += 1
+        db.session.add(Bet(state='Pending', timestamp=datetime.utcnow(), punter=g.user, selected=s))
         db.session.commit()
     session.pop('betslip', None)
     return redirect(url_for('index'))
