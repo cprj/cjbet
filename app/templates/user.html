@@ -4,13 +4,13 @@
 {% block content %}
 {% include 'flash.html' %}
 <div class="well well-large" style="height: 140px;">
-    <div class="pull-right">
-        <img src="{{user.avatar(128)}}" class="img-polaroid">
-    </div>
-    <h1>{{user.nickname}}</h1>
-    {% if user.about_me %}<p>{{user.about_me}}</p>{% endif %}
+    <h1>{{user.email}} {% if g.user.balance < 0 %}
+                        <span class="label label-danger">
+                    {% else %}
+                        <span class="label label-success">
+                    {% endif %}{{'$%0.2f' % g.user.balance}}</span></h1>
     {% if user.last_seen %}
-    <p><em>Last seen: {{momentjs(user.last_seen).calendar()}}</em></p>
+    <p><em>Last seen: {{momentjs(user.last_login_at).calendar()}}</em></p>
     {% endif %}
 </div>
 <div class="panel panel-primary">

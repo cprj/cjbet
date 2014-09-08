@@ -18,7 +18,7 @@
     <script src="/static/js/moment.min.js"></script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
   </head>
-  <body>
+  <body class="{% block body_class %}{% endblock %}">
     <div class="container"> 
     <nav role="navigation" class="navbar navbar-default">
         <!-- Brand and toggle get grouped for better mobile display -->
@@ -36,17 +36,6 @@
             <ul class="nav navbar-nav nav-pills">
                 <li><a href="{{ url_for('index') }}">Home</a></li>
                 {% if g.user.is_authenticated() %}
-	                <li><a href="{{ url_for('user', nickname = g.user.nickname) }}">Your Profile</a></li>
-	                <li class="dropdown">
-	                    <a data-toggle="dropdown" class="dropdown-toggle" href="#">Messages <b class="caret"></b></a>
-	                    <ul role="menu" class="dropdown-menu">
-	                        <li><a href="#">Inbox</a></li>
-	                        <li><a href="#">Drafts</a></li>
-	                        <li><a href="#">Sent Items</a></li>
-	                        <li class="divider"></li>
-	                        <li><a href="#">Trash</a></li>
-	                    </ul>
-	                </li>
 	                {% if session.betslip %}
 	                <li class="active"><a href="#" class="btn" data-toggle="modal" data-target="#smallModal"><span class="badge">{{ session.betslip|length }}</span>Bet Slip</a></li>
 	                {% endif %}
@@ -54,20 +43,41 @@
             </ul>
             <ul class="nav navbar-nav navbar-right">
                 {% if g.user.is_authenticated() %}
-                	<li><a href="{{ url_for('logout') }}">Logout</a></li>
+                    <li><a href="{{ url_for('user', email = g.user.email) }}">{{g.user.email}}</a></li>
+                    {% if g.user.balance < 0 %}
+                        <li class="bg-danger">
+                    {% else %}
+                        <li class="bg-success">
+                    {% endif %}
+                        <a href="{{ url_for('user', email = g.user.email) }}">Bal: {{'$%0.2f' % g.user.balance}}</a></li>
+                    <li><a href="{{ url_for_security('logout') }}">Logout</a></li>
 	            {% else %}
-	            	<li><a href="#">Login</a></li>
+	            	<li><a href="{{ url_for_security('login') }}">Login</a></li>
 	            {% endif %}
             </ul>
         </div>
     </nav>
   
-    <div class="row">
-        <div class="col-sm-12 col-md-12">
+        <h1>TODO<ul>
+            <li>encrypt password</li>
+            <li>admin - edit user</li>
+            <li>admin - lock market</li>
+            <li>admin - add result</li>
+            <li>admin - manage jackpots</li>
+            <li>results page</li>
+            <li>recover password</li>
+            <li>ui tweaks</li>
+            <li>notify winner</li>
+            <li>user's stats/performance/history</li>
+            </ul></h1>
+   
           {% block content %}{% endblock %}
-        </div>
-    </div>
+
+        <footer class="footer">
+      <p class="text-center" >Copyright &copy; 2014 by Corey Jansen</p>
+    </footer>
   </div>
   {% include 'betslip.html' %}
+  
   </body>
 </html>

@@ -1,14 +1,9 @@
 from flask import render_template, flash, redirect, session, url_for, request, g
-from flask.ext.login import login_user, logout_user, current_user, login_required
-from app import app, db, lm, oid
-from forms import LoginForm, EditForm
-from models import User, ROLE_USER, ROLE_ADMIN, Event, Market, Selection, Bet
+from flask.ext.security import LoginForm, current_user, login_required, login_user
+from app import app, db
+from forms import EditForm, RegisterForm
+from models import User, Event, Market, Selection, Bet
 from datetime import datetime
-from config import POSTS_PER_PAGE, MAX_SEARCH_RESULTS
-
-@lm.user_loader
-def load_user(id):
-    return User.query.get(int(id))
 
 @app.before_request
 def before_request():
@@ -29,9 +24,8 @@ def internal_error(error):
 
 @app.route('/', methods = ['GET', 'POST'])
 @app.route('/index', methods = ['GET', 'POST'])
-@app.route('/index/<int:page>', methods = ['GET', 'POST'])
 @login_required
-def index(page = 1):
+def index():
     events = Event.query.all()
     markets = Market.query.all()
     return render_template('index.html',
@@ -39,72 +33,30 @@ def index(page = 1):
         events = events,
         markets = markets)
 
-@app.route('/login', methods = ['GET', 'POST'])
-@oid.loginhandler
-def login():
-    if g.user is not None and g.user.is_authenticated():
-        return redirect(url_for('index'))
-    form = LoginForm()
-    if form.validate_on_submit():
-        session['remember_me'] = form.remember_me.data
-        return oid.try_login(form.openid.data, ask_for = ['nickname', 'email'])
-    return render_template('login.html', 
-        title = 'Sign In',
-        form = form,
-        providers = app.config['OPENID_PROVIDERS'])
 
-@oid.after_login
-def after_login(resp):
-    if resp.email is None or resp.email == "":
-        flash('Invalid login. Please try again.')
-        return redirect(url_for('login'))
-    user = User.query.filter_by(email = resp.email).first()
-    if user is None:
-        nickname = resp.nickname
-        if nickname is None or nickname == "":
-            nickname = resp.email.split('@')[0]
-        nickname = User.make_unique_nickname(nickname)
-        user = User(nickname = nickname, email = resp.email, role = ROLE_USER)
-        db.session.add(user)
-        db.session.commit()
-        db.session.commit()
-    remember_me = False
-    if 'remember_me' in session:
-        remember_me = session['remember_me']
-        session.pop('remember_me', None)
-    login_user(user, remember = remember_me)
-    return redirect(request.args.get('next') or url_for('index'))
 
-@app.route('/logout')
-def logout():
-    if 'betslip' in session:
-    	session.pop('betslip', None)
-    logout_user()
-    return redirect(url_for('index'))
-    
-@app.route('/user/<nickname>')
+@app.route('/user/<email>')
 @login_required
-def user(nickname):
-    user = User.query.filter_by(nickname = nickname).first()
+def user(email):
+    user = User.query.filter_by(email = email).first()
     if user == None:
-        flash('User ' + nickname + ' not found.')
+        flash('User ' + email + ' not found.')
         return redirect(url_for('index'))
     return render_template('user.html', user = user)
 
 @app.route('/edit', methods = ['GET', 'POST'])
 @login_required
 def edit():
-    form = EditForm(g.user.nickname)
+    form = EditForm(g.user.email)
     if form.validate_on_submit():
-        g.user.nickname = form.nickname.data
+        g.user.email = form.email.data
         g.user.about_me = form.about_me.data
         db.session.add(g.user)
         db.session.commit()
         flash('Your changes have been saved.')
         return redirect(url_for('edit'))
     elif request.method != "POST":
-        form.nickname.data = g.user.nickname
-        form.about_me.data = g.user.about_me
+        form.nickname.data = g.user.email
     return render_template('edit.html',
         form = form)
 
@@ -146,6 +98,8 @@ def confirm_bets():
         s = Selection.query.get(selection.id)
         s.selected_count += 1
         db.session.add(Bet(state='Pending', timestamp=datetime.utcnow(), punter=g.user, selected=s))
+        u = User.query.get(g.user.id)
+        u.balance -= 1
         db.session.commit()
     session.pop('betslip', None)
     return redirect(url_for('index'))

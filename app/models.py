@@ -1,46 +1,40 @@
 from hashlib import md5
 from app import db
 from app import app
+from flask.ext.security import UserMixin, RoleMixin
 
-ROLE_USER = 0
-ROLE_ADMIN = 1
+roles_users = db.Table('roles_users',
+        db.Column('user_id', db.Integer(), db.ForeignKey('user.id')),
+        db.Column('role_id', db.Integer(), db.ForeignKey('role.id')))
 
-class User(db.Model):
+class Role(db.Model, RoleMixin):
+    id = db.Column(db.Integer(), primary_key=True)
+    name = db.Column(db.String(80), unique=True)
+    description = db.Column(db.String(255))
+
+class User(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key = True)
-    nickname = db.Column(db.String(64), unique = True)
-    email = db.Column(db.String(120), index = True, unique = True)
-    role = db.Column(db.SmallInteger, default = ROLE_USER)
+    nickname = db.Column(db.String(20), unique = True)
+    email = db.Column(db.String(255), unique=True)
+    password = db.Column(db.String(255))
+    active = db.Column(db.Boolean())
     bets = db.relationship('Bet', backref = 'punter', lazy = 'dynamic')
-    about_me = db.Column(db.String(140))
-    last_seen = db.Column(db.DateTime)
+    balance = db.Column(db.Float(), default = 0)
+    last_login_at = db.Column(db.DateTime)
+    current_login_at = db.Column(db.DateTime)
+    last_login_ip = db.Column(db.String(20))
+    current_login_ip = db.Column(db.String(20))
+    login_count = db.Column(db.Integer)
+    confirmed_at = db.Column(db.DateTime)
+    roles = db.relationship('Role', secondary=roles_users,
+                            backref=db.backref('users', lazy='dynamic'))
     
-    @staticmethod
-    def make_unique_nickname(nickname):
-        if User.query.filter_by(nickname = nickname).first() == None:
-            return nickname
-        version = 2
-        while True:
-            new_nickname = nickname + str(version)
-            if User.query.filter_by(nickname = new_nickname).first() == None:
-                break
-            version += 1
-        return new_nickname
-        
-    def is_authenticated(self):
-        return True
-
-    def is_active(self):
-        return True
-
-    def is_anonymous(self):
-        return False
-
     def get_id(self):
         return unicode(self.id)
 
-    def avatar(self, size):
-        return 'http://www.gravatar.com/avatar/' + md5(self.email).hexdigest() + '?d=mm&s=' + str(size)
-                
+    def __str__(self):
+        return '<User id=%s email=%s>' % (self.id, self.email)
+    
     def __repr__(self):
         return '<User %r>' % (self.nickname)    
         
