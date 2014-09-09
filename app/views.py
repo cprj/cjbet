@@ -1,9 +1,11 @@
 from flask import render_template, flash, redirect, session, url_for, request, g
-from flask.ext.security import LoginForm, current_user, login_required, login_user
+from flask.ext.security import LoginForm, current_user, login_required, login_user, roles_required
 from app import app, db
 from forms import EditForm, RegisterForm
 from models import User, Event, Market, Selection, Bet
 from datetime import datetime
+from emails import send_email
+from config import ADMINS
 
 @app.before_request
 def before_request():
@@ -32,8 +34,6 @@ def index():
         title = 'Home',
         events = events,
         markets = markets)
-
-
 
 @app.route('/user/<email>')
 @login_required
@@ -103,3 +103,33 @@ def confirm_bets():
         db.session.commit()
     session.pop('betslip', None)
     return redirect(url_for('index'))
+
+@app.route('/results')
+@login_required
+def results():
+    results = Selection.query.filter_by(is_winner = True).all()
+    return render_template('results.html', results = results)
+
+@app.route('/process')
+@roles_required('admin')
+def process():
+    # find selections for winners
+    with_result = Selection.query.filter_by(is_winner = True).all()
+    # update all bets, for winners, update their balance
+    for result in with_result:
+        # update winners' balances
+        winning_bets = Bet.query.filter_by(selection_id = result.id).all()
+        for winbet in winning_bets:
+            if winbet.state == 'Pending':
+                u = User.query.get(winbet.punter.id)
+                u.balance += result.dividend()
+                winbet.state = 'Winner'
+        # update non-winning bets
+        losing_market = result.market
+        for selection in losing_market.selections:
+            if not selection.is_winner:
+                losing_bets = Bet.query.filter_by(selection_id = selection.id).all()
+                for losebet in losing_bets:
+                    losebet.state = 'Loss'
+    db.session.commit()
+    return results()

@@ -11,6 +11,9 @@ class Role(db.Model, RoleMixin):
     id = db.Column(db.Integer(), primary_key=True)
     name = db.Column(db.String(80), unique=True)
     description = db.Column(db.String(255))
+    
+    def __unicode__(self):
+        return self.name
 
 class User(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key = True)
@@ -44,7 +47,9 @@ class Event(db.Model):
     start = db.Column(db.DateTime)
     is_locked = db.Column(db.Boolean, default = False)
     markets = db.relationship('Market', backref = 'event', lazy = 'dynamic')
-    # has many markets
+    
+    def __unicode__(self):
+        return self.name
 
 class Market(db.Model):
     id = db.Column(db.Integer, primary_key = True)
@@ -56,6 +61,9 @@ class Market(db.Model):
     
     def selections_by_divd(self):
         return Selection.query.filter_by(market_id = self.id).order_by(Selection.selected_count.desc()).all()
+    
+    def __unicode__(self):
+        return self.name
 	
 class Selection(db.Model):
     id = db.Column(db.Integer, primary_key = True)
@@ -74,10 +82,23 @@ class Selection(db.Model):
     def market_name(self):
         return Market.query.get(self.market_id).name
     
+    def __unicode__(self):
+        return self.name
+    
 class Bet(db.Model):
     id = db.Column(db.Integer, primary_key = True)
     state = db.Column(db.String(64)) # pending, win, loss
     timestamp = db.Column(db.DateTime)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
     selection_id = db.Column(db.Integer, db.ForeignKey('selection.id'))
+    
+    def get_state_label(self):
+        print self.state
+        if self.state == 'Pending':
+            return 'info'
+        elif self.state == 'Winner':
+            return 'success'
+        elif self.state == 'Loss':
+            return 'warning'
+            
     

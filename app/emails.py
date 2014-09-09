@@ -13,8 +13,6 @@ def send_email(subject, sender, recipients, text_body, html_body):
     msg.body = text_body
     msg.html = html_body
     send_async_email(msg)
-    #thr = threading.Thread(target = send_async_email, args = [msg])
-    #thr.start()
 
     
 def follower_notification(followed, follower):

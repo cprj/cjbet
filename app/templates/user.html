@@ -20,7 +20,8 @@
         <tr><th>Time</th><th>Market</th><th>Selection</th><th>State</th></tr>
         {% for bet in user.bets %}
             <tr>
-            <td>{{momentjs(bet.timestamp).calendar()}}</td><td>{{bet.selected.market.name}}</td><td>{{bet.selected.name}}</td><td>{{bet.state}}</td>
+            <td>{{momentjs(bet.timestamp).calendar()}}</td><td>{{bet.selected.market.name}}</td><td>{{bet.selected.name}}</td>
+                <td><span class="label label-{{bet.get_state_label()}}">{{bet.state}}</span></td>
             </tr>
         {% endfor %}
         </table>

@@ -1,0 +1,19 @@
+<!-- extend base layout -->
+{% extends "base.html" %}
+
+{% block content %}
+{% include 'flash.html' %}
+<div class="jumbotron">
+    <h1>Results</h1>
+    {% if results %}
+    <div class="list-group">
+        {% for result in results %}
+        <h3 class="list-group-item-heading">{{ result.market.name }}</h4>
+        <p class="list-group-item-text"><span class="label label-info pull-right">{{'$%0.2f' % result.dividend()}}</span>{{ result.name }}</p>
+        {% endfor %}
+    </div>
+    {% else %}
+        <h3>No results.</h3>
+    {% endif %}
+</div>
+{% endblock %}
