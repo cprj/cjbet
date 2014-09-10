@@ -8,8 +8,15 @@
     {% if results %}
     <div class="list-group">
         {% for result in results %}
-        <h3 class="list-group-item-heading">{{ result.market.name }}</h4>
+        <h3 class="list-group-item-heading">{{ result.market.name }}<span class="pull-right">Paid:</span></h4>
         <p class="list-group-item-text"><span class="label label-info pull-right">{{'$%0.2f' % result.dividend()}}</span>{{ result.name }}</p>
+            {% if result.bets %}
+                {% for bet in result.bets %}
+                    <p>Winners: <span class="pull-right">{{bet.punter.email}}</span></p>
+                {% endfor %}
+            {% else %}
+                <p>No Winners. Jackpot!</p>
+            {% endif %}
         {% endfor %}
     </div>
     {% else %}
